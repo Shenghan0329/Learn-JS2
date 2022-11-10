@@ -1,9 +1,15 @@
 .wrapper{
-
+	margin:30% auto;
+	background-color:#bfa;
+	padding:10%;
 }
 .wrapper p{
-
+	margin:10% auto;
+	background-color:#00ffff;
 }
 .board{
-
+	margin:20% auto;
+	background-color:antiquewhite;
 }
+	.board div {
+	}
