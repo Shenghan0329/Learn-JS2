@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Russian Cubes</title>
+    <title>Tanks War</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="tank.js"></script>
+    <script>
+        window.addEventListener("load", () => {
+            //function simulContinuous(func1, func2) {
+            //    var stop = setInterval(function () {
+            //        func1();
+            //        func2();
+            //    }, 5);
+            //    window.addEventListener("keyup", function () {
+            //        //stop the loop
+            //        clearInterval(stop);
+            //        //and remove the keyup listener
+            //        window.removeEventListener("keyup", arguments.callee);
+            //    });
+            //}
+            const g = document.querySelector("#Green");
+            const y = document.querySelector("#Yellow");
+            const Green = new Tank(g);
+            const Yellow = new Tank(y);
+            Green.name.style.transform = "rotate(180deg)";
+            Yellow.name.style.transform = "rotate(0deg)";
+            setMove(Green, 37, 38, 39, 40, Yellow, 65, 87, 68, 83);
+        });
+    </script>
+    
 </head>
 <body>
     <div class="wrapper">
-        <p>Russian Cubes</p>
-        <div class="board"></div>
-        <div>bbb</div>
+        <p>Tanks War</p>
+        <div class="board">
+            <div class="Tank" id="Green"></div>
+            <div class="Tank" id="Yellow"></div>
+        </div>
     </div>
 </body>
 </html>

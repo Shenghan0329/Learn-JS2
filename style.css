@@ -1,15 +1,40 @@
+*{
+	margin:0px;
+	padding:0px;
+}
 .wrapper{
-	margin:30% auto;
+	margin:50px auto;
 	background-color:#bfa;
-	padding:10%;
+	width:80%;
+	height:800px;
 }
 .wrapper p{
-	margin:10% auto;
-	background-color:#00ffff;
+	float:inline-start;
 }
 .board{
-	margin:20% auto;
+	margin:10% auto;
+	width:60%;
+	height:60%;
 	background-color:antiquewhite;
+	overflow:hidden;
+	position:relative;
 }
-	.board div {
-	}
+.Tank {
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	background-color: black;
+}
+#Green {
+	background-image: url("./green.png");
+	background-size: cover;
+	left: 0px;
+	top: 0px;
+	transform:rotate(180deg);
+}
+#Yellow {
+	background-image: url("./yellow.png");
+	background-size: cover;
+	right: 0px;
+	bottom: 0px;
+}
