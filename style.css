@@ -7,14 +7,15 @@
 	background-color:#bfa;
 	width:80%;
 	height:800px;
+	flex:content;
 }
 .wrapper p{
 	float:inline-start;
 }
 .board{
 	margin:10% auto;
-	width:60%;
-	height:60%;
+	width:800px;
+	height:500px;
 	background-color:antiquewhite;
 	overflow:hidden;
 	position:relative;
@@ -37,4 +38,13 @@
 	background-size: cover;
 	right: 0px;
 	bottom: 0px;
+}
+.bullet {
+	position: absolute;
+	border-radius:50%;
+	left: 100px;
+	top: 100px;
+	height: 10px;
+	width: 10px;
+	background-color: black;
 }

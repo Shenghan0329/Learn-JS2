@@ -1,8 +1,12 @@
 class Tank {
-    constructor(name) {
+    constructor(name, rotate, boardwidth, boardheight) {
         this.name = name;
+        this.boardwidth = boardwidth;
+        this.boardheight = boardheight;
+        var tank = this.name;
+        tank.style.transform = "rotate(" + rotate + "deg)";
     }
-
+    
     move(char, value) {
         let oldValue = parseInt(getComputedStyle(this.name).getPropertyValue(char));
         var newValue = oldValue + value;
@@ -13,7 +17,6 @@ class Tank {
         if (rotate) {
             var [num, unit] = rotate.slice(1);
             num = parseInt(num) % 360;
-            console.log(num);
         } else {
             num = 0;
         }
@@ -22,7 +25,6 @@ class Tank {
         }
         num = num > 0 ? num : num + 360;
         var diff = (num - endpoint);
-        console.log(diff);
         var direction;
         if ((diff > 0&&diff<180)||(diff<0&&diff<-180)) {
             direction = -1;
@@ -33,16 +35,39 @@ class Tank {
         var deg = num + direction * angle;
         this.name.style.transform = "rotate(" + deg + "deg)";
     }
+    isLegal(dir,sign) {
+        var tank = this.name;
+        var dir = parseInt(tank.style[dir]);
+/*        console.log(dir);*/
+        if (sign > 0) {
+            if (dir < 0) {
+                return false;
+            }
+        } else if (sign < 0) {
+            //console.log(dir);
+            //console.log(this.boardwidth);
+            if (dir > this.boardwidth) {
+                return false;
+            }
+        } else {
+            //console.log(dir);
+            //console.log(this.boardheight);
+            if (dir > this.boardheight) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
-function setMove(t1,c1, c2, c3, c4,t2,d1,d2,d3,d4) {
+function setMove(t1, c1, c2, c3, c4, t2, d1, d2, d3, d4) {
     var speed;
     document.onkeydown = function (event) {
         event = event || window.event;
         // event.preventDefault();
         if (event.ctrlKey) {
-            speed = 6;
+            speed = 4;
         } else {
-            speed = 3;
+            speed = 2;
         }
         function s(tank, c1, c2, c3, c4) {
             var Green = tank;
@@ -50,8 +75,11 @@ function setMove(t1,c1, c2, c3, c4,t2,d1,d2,d3,d4) {
                 case c1: //left
                     // simulContinuous(Green.move("left", -speed), Green.rotate(5, 270));
                     var stop = setInterval(function () {
-                        Green.move("left", -speed);
-                        Green.rotate(5, 270);
+                        if (Green.isLegal("left", 1)) {
+                            Green.move("left", -speed);
+                            Green.rotate(5, 270);
+                        }
+                        
                     }, 25);
                     window.addEventListener("keyup", function () {
                         //stop the loop
@@ -68,8 +96,10 @@ function setMove(t1,c1, c2, c3, c4,t2,d1,d2,d3,d4) {
                     break;
                 case c2: //up
                     var stop = setInterval(function () {
-                        Green.move("top", -speed);
-                        Green.rotate(5, 0);
+                        if (Green.isLegal("top", 1)) {
+                            Green.move("top", -speed);
+                            Green.rotate(5, 0);
+                        }
                     }, 25);
                     window.addEventListener("keyup", function () {
                         //stop the loop
@@ -81,8 +111,10 @@ function setMove(t1,c1, c2, c3, c4,t2,d1,d2,d3,d4) {
                     break;
                 case c3: //right
                     var stop = setInterval(function () {
-                        Green.move("left", speed);
-                        Green.rotate(5, 90);
+                        if (Green.isLegal("left", -1)) {
+                            Green.move("left", speed);
+                            Green.rotate(5, 90);
+                        }
                     }, 25);
                     window.addEventListener("keyup", function () {
                         //stop the loop
@@ -94,9 +126,12 @@ function setMove(t1,c1, c2, c3, c4,t2,d1,d2,d3,d4) {
                     // g.style.left = g.offsetLeft + speed + "px";
                     break;
                 case c4: //down
+                    
                     var stop = setInterval(function () {
-                        Green.move("top", speed);
-                        Green.rotate(5, 180);
+                        if (Green.isLegal("top", 0)) {
+                            Green.move("top", speed);
+                            Green.rotate(5, 180);
+                        }
                     }, 25);
                     window.addEventListener("keyup", function () {
                         //stop the loop
