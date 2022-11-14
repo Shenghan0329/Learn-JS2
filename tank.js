@@ -1,3 +1,42 @@
+class bullet {
+    constructor(obj, damage, l, t, dirX, dirY, speed, bounce) {
+        this.obj = obj;
+        this.damage = damage;
+        this.l = l;
+        this.t = t;
+        this.obj.style.left = l + "px";
+        this.obj.style.top = t + "px";
+        this.dirX = dirX;
+        this.dirY = dirY;
+        this.speed = speed;
+        this.bounce = bounce;
+    }
+    clear() {
+        var b = this.obj;
+        b.parentElement.removeChild(b);
+        // this = null;
+    }
+    fly() {
+        let bullet = this;
+        let b = this.obj;
+        let dirX = this.dirX;
+        let dirY = this.dirY;
+        let speed = this.speed;
+        var stop = setInterval(function () {
+            var left = parseInt(b.style.left);
+            var top = parseInt(b.style.top);
+            var posX = left + 2 * speed * dirX;
+            var posY = top + 2 * speed * dirY;
+            // console.log(posX);
+            b.style.left = posX + "px";
+            b.style.top = posY + "px";
+        }, 10);
+        setTimeout(function () {
+            clearInterval(stop);
+            bullet.clear();
+        }, 4000);
+    }
+}
 class Tank {
     constructor(name, rotate, boardwidth, boardheight) {
         this.name = name;
@@ -58,29 +97,50 @@ class Tank {
         }
         return true;
     }
+    setBullet(speed) {
+        let left = parseInt(getComputedStyle(this.name).getPropertyValue("left"))+20;
+        let top = parseInt(getComputedStyle(this.name).getPropertyValue("top"))+20;
+        let rotate = this.name.style.transform.match(/rotate\((.+)\)/);
+        if (rotate) {
+            var [angle, unit] = rotate.slice(1);
+            angle = parseInt(angle) % 360;
+        }
+        angle = angle > 0 ? angle : angle + 360;
+        console.log(angle);
+        let dirX = Math.sin(angle*Math.PI/180);
+        let dirY = -Math.cos(angle*Math.PI/180);
+        let board = document.querySelector(".board");
+        console.log("dirX:" + dirX);
+        console.log("dirY:" + dirY);
+        let bull = document.createElement("div");
+        bull.className = "bullet";
+        board.appendChild(bull);
+        let b = new bullet(bull, 10, left, top, dirX, dirY, speed, 0);
+        return b;
+    }
 }
-function setMove(t1, c1, c2, c3, c4, t2, d1, d2, d3, d4) {
+function setMove(t1, c1, c2, c3, c4, c5,t2, d1, d2, d3, d4,d5) {
     var speed;
     document.onkeydown = function (event) {
         event = event || window.event;
-        // event.preventDefault();
+        event.preventDefault();
         if (event.ctrlKey) {
             speed = 4;
         } else {
             speed = 2;
         }
-        function s(tank, c1, c2, c3, c4) {
+        function s(tank, c1, c2, c3, c4,c5) {
             var Green = tank;
             switch (event.keyCode) {
                 case c1: //left
                     // simulContinuous(Green.move("left", -speed), Green.rotate(5, 270));
                     var stop = setInterval(function () {
                         if (Green.isLegal("left", 1)) {
-                            Green.move("left", -speed);
-                            Green.rotate(5, 270);
+                            Green.move("left", -speed/2);
+                            Green.rotate(1, 270);
                         }
                         
-                    }, 25);
+                    }, 10);
                     window.addEventListener("keyup", function () {
                         //stop the loop
                         clearInterval(stop);
@@ -97,10 +157,10 @@ function setMove(t1, c1, c2, c3, c4, t2, d1, d2, d3, d4) {
                 case c2: //up
                     var stop = setInterval(function () {
                         if (Green.isLegal("top", 1)) {
-                            Green.move("top", -speed);
-                            Green.rotate(5, 0);
+                            Green.move("top", -speed/2);
+                            Green.rotate(1, 0);
                         }
-                    }, 25);
+                    }, 10);
                     window.addEventListener("keyup", function () {
                         //stop the loop
                         clearInterval(stop);
@@ -112,10 +172,10 @@ function setMove(t1, c1, c2, c3, c4, t2, d1, d2, d3, d4) {
                 case c3: //right
                     var stop = setInterval(function () {
                         if (Green.isLegal("left", -1)) {
-                            Green.move("left", speed);
-                            Green.rotate(5, 90);
+                            Green.move("left", speed/2);
+                            Green.rotate(1, 90);
                         }
-                    }, 25);
+                    }, 10);
                     window.addEventListener("keyup", function () {
                         //stop the loop
                         clearInterval(stop);
@@ -129,10 +189,10 @@ function setMove(t1, c1, c2, c3, c4, t2, d1, d2, d3, d4) {
                     
                     var stop = setInterval(function () {
                         if (Green.isLegal("top", 0)) {
-                            Green.move("top", speed);
-                            Green.rotate(5, 180);
+                            Green.move("top", speed/2);
+                            Green.rotate(1, 180);
                         }
-                    }, 25);
+                    }, 10);
                     window.addEventListener("keyup", function () {
                         //stop the loop
                         clearInterval(stop);
@@ -141,11 +201,14 @@ function setMove(t1, c1, c2, c3, c4, t2, d1, d2, d3, d4) {
                     });
                     // g.style.top = g.offsetTop + speed + "px";
                     break;
+                case c5:
+                    var b = Green.setBullet(2);
+                    b.fly();
                 default:
                     break;
             }
         }
-        s(t1, c1, c2, c3, c4);
-        s(t2, d1, d2, d3, d4);
+        s(t1, c1, c2, c3, c4,c5);
+        s(t2, d1, d2, d3, d4,d5);
     }
 }

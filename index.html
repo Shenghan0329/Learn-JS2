@@ -4,7 +4,7 @@
     <title>Tanks War</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="tank.js"></script>
-    <script src="bullet.js"></script>
+    <!--<script src="bullet.js"></script>-->
     <script>
         window.addEventListener("load", () => {
             //function simulContinuous(func1, func2) {
@@ -26,17 +26,19 @@
             let boardHeight = parseInt(b.offsetHeight) - 50;
             
             y.style.left = boardWidth; y.style.top = boardHeight;
-            console.log(g.style.left);
             const Green = new Tank(g, 180, boardWidth, boardHeight);
             const Yellow = new Tank(y, 0, boardWidth, boardHeight);
             Green.name.style.transform = "rotate(180deg)";
             Yellow.name.style.transform = "rotate(0deg)";
-            setMove(Green, 37, 38, 39, 40, Yellow, 65, 87, 68, 83);
+            setMove(Green, 37, 38, 39, 40,17, Yellow, 65, 87, 68, 83,81);
 
             let bull = document.querySelector(".bullet");
             let bu = new bullet(bull, 10, 100, 100, 0.414, 0.414, 2, 0);
             bull.onclick = function () {
                 bu.fly();
+            }
+            g.onclick = function () {
+                Green.setBullet(2);
             }
         });
     </script>
