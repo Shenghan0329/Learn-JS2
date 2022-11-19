@@ -50,3 +50,14 @@
 	background-color: black;
 	z-index:1;
 }
+.hit{
+	height:55px;
+	width:55px;
+	opacity:0.6
+}
+.destroyed {
+	height: 50px;
+	width: 50px;
+	background-color: black;
+	background-image: url("./destroyed.jpg");
+}

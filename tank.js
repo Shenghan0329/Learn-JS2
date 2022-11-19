@@ -16,25 +16,55 @@ class bullet {
         b.parentElement.removeChild(b);
         // this = null;
     }
-    fly() {
+    fly(obj) {
         let bullet = this;
         let b = this.obj;
         let dirX = this.dirX;
         let dirY = this.dirY;
         let speed = this.speed;
+        let hit = false;
         var stop = setInterval(function () {
             var left = parseInt(b.style.left);
             var top = parseInt(b.style.top);
             var posX = left + 2 * speed * dirX;
             var posY = top + 2 * speed * dirY;
             // console.log(posX);
-            b.style.left = posX + "px";
-            b.style.top = posY + "px";
+            if (!bullet.hit(obj)) {
+                b.style.left = posX + "px";
+                b.style.top = posY + "px";
+            }
+            else {
+                clearInterval(stop);
+                bullet.clear();
+                hit = true;
+                obj.life = obj.life - 10;
+                addClass(obj.name,"hit");
+                setTimeout(function () {
+                    removeClass(obj.name, "hit");
+                }, 200);
+                obj.isDead();
+            }
         }, 10);
         setTimeout(function () {
+            if (hit == true) {
+                return;
+            }
             clearInterval(stop);
             bullet.clear();
         }, 4000);
+    }
+    hit(obj) {
+        let b = this.obj;
+        let bX = parseInt(b.style.left);
+        let bY = parseInt(b.style.top);
+        let oX = parseInt(obj.name.style.left)+20;
+        let oY = parseInt(obj.name.style.top)+20;
+        let dist = Math.sqrt(((bX - oX) * (bX - oX) + (bY - oY) * (bY - oY)));
+        if (dist < 32) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 class Tank {
@@ -43,9 +73,24 @@ class Tank {
         this.boardwidth = boardwidth;
         this.boardheight = boardheight;
         var tank = this.name;
+        this.life = 500;
         tank.style.transform = "rotate(" + rotate + "deg)";
     }
-    
+    isAlive() {
+        return this.life > 0 ? true : false;
+    }
+    isDead() {
+        console.log(this.isAlive());
+        if (!this.isAlive()) {
+            this.name.backgroundImage = "";
+            setTimeout(function () {
+                removeClass(this.name, "destroyed");
+                // this.name.parentElement.removeChild(this.name);
+                alert("Game ended");
+                location.reload();
+            }, 3000);
+        }
+    }
     move(char, value) {
         let oldValue = parseInt(getComputedStyle(this.name).getPropertyValue(char));
         var newValue = oldValue + value;
@@ -119,17 +164,17 @@ class Tank {
         return b;
     }
 }
-function setMove(t1, c1, c2, c3, c4, c5,t2, d1, d2, d3, d4,d5) {
+function setMove(t1, c1, c2, c3, c4, c5,target,t2, d1, d2, d3, d4,d5,target2) {
     var speed;
     document.onkeydown = function (event) {
         event = event || window.event;
-        event.preventDefault();
+        //event.preventDefault();
         if (event.ctrlKey) {
             speed = 4;
         } else {
             speed = 2;
         }
-        function s(tank, c1, c2, c3, c4,c5) {
+        function s(tank, c1, c2, c3, c4,c5,tar) {
             var Green = tank;
             switch (event.keyCode) {
                 case c1: //left
@@ -203,12 +248,27 @@ function setMove(t1, c1, c2, c3, c4, c5,t2, d1, d2, d3, d4,d5) {
                     break;
                 case c5:
                     var b = Green.setBullet(2);
-                    b.fly();
+                    b.fly(tar);
                 default:
                     break;
             }
         }
-        s(t1, c1, c2, c3, c4,c5);
-        s(t2, d1, d2, d3, d4,d5);
+        s(t1, c1, c2, c3, c4,c5,target);
+        s(t2, d1, d2, d3, d4,d5,target2);
+    }
+}
+function addClass(obj, cn) {
+    if (!hasClass(obj, cn)) {
+        obj.className += " " + cn;
+    }
+}
+function hasClass(obj, cn) {
+    let reg = new RegExp("\\b" + cn + "\\b");
+    return reg.test(obj.className);
+}
+
+function removeClass(obj, cn) {
+    if (hasClass(obj, cn)) {
+        obj.className = obj.className.replace(cn, "");
     }
 }
